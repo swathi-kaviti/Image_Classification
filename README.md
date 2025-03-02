@@ -15,9 +15,8 @@ This project implements an image classification system using a Convolutional Neu
 
 Python (TensorFlow, Keras, Flask)
 
-HTML, CSS, JavaScript
+HTML, CSS
 
-Bootstrap (for styling)
 
 ### Dataset:
 **CIFAR-10:** A dataset of 60,000 32x32 color images in 10 classes, with 6,000 images per class (e.g., airplane, car, bird, cat, etc.).
