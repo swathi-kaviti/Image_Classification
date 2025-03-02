@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Classifier</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            text-align: center;
+            margin-top: 50px;
+            color: #333;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 40px;
+        }
+
+        input[type="file"] {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background-color: white;
+            margin-bottom: 20px;
+            width: 80%;
+            max-width: 400px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .prediction {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Image Classification with CNN (CIFAR-10)</h1>
+    <form id="imageForm" enctype="multipart/form-data">
+        <input type="file" id="fileInput" name="file" accept="image/*">
+        <button type="submit">Upload and Predict</button>
+    </form>
+
+    <div id="predictionResult" class="prediction"></div>
+
+    <script>
+        document.getElementById('imageForm').addEventListener('submit', function (event) {
+            event.preventDefault();  // Prevent the form from submitting normally
+
+            let formData = new FormData();
+            formData.append('file', document.getElementById('fileInput').files[0]);
+
+            fetch('/predict', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                const predictionDiv = document.getElementById('predictionResult');
+
+                // Check if prediction is available
+                if (data.class && data.confidence !== undefined) {
+                    predictionDiv.innerHTML = `
+                        <p>Prediction: ${data.class}</p>
+                        <p>Confidence: ${(data.confidence * 100).toFixed(2)}%</p>
+                    `;
+                } else {
+                    predictionDiv.innerHTML = '<p>No prediction found.</p>';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('predictionResult').innerHTML = '<p>There was an error processing the request.</p>';
+            });
+        });
+    </script>
+</body>
+
+</html>
